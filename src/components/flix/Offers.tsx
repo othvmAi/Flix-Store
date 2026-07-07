@@ -117,48 +117,18 @@ for (const [path, url] of Object.entries(posterModules)) {
   if (m) POSTERS[m[1].toLowerCase()] = url;
 }
 
-/**
- * mode="natural" — used in the grid: the image keeps its own real aspect
- *   ratio and the card grows/shrinks to match it (no crop, no letterboxing).
- * mode="cover" — used in the modal, which has a fixed square slot: the
- *   image is shown whole via object-contain, backed by a blurred fill.
- */
-function CoverArt({ game, mode = "cover" }: { game: Game; mode?: "natural" | "cover" }) {
+function CoverArt({ game }: { game: Game }) {
   const url = POSTERS[game.slug.toLowerCase()];
-
-  if (url && mode === "natural") {
+  if (url) {
     return (
       <img
         src={url}
         alt={game.name}
         loading="lazy"
-        className="block w-full h-auto transition-transform duration-700 group-hover:scale-105"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
     );
   }
-
-  if (url) {
-    return (
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Blurred fill so odd-ratio posters never get cropped */}
-        <img
-          src={url}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover scale-125 blur-2xl opacity-50"
-        />
-        {/* Full, uncropped poster */}
-        <img
-          src={url}
-          alt={game.name}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
-        />
-      </div>
-    );
-  }
-
   const initials = game.name
     .replace(/[^A-Za-z0-9 ]/g, "")
     .split(" ")
@@ -167,30 +137,13 @@ function CoverArt({ game, mode = "cover" }: { game: Game; mode?: "natural" | "co
     .map((w) => w[0])
     .join("")
     .toUpperCase();
-
-  const placeholder = (
-    <>
+  return (
+    <div className={`absolute inset-0 bg-gradient-to-br ${game.accent} flex items-center justify-center`}>
       <div className="absolute inset-0 opacity-30"
         style={{ backgroundImage: "radial-gradient(circle at 30% 20%, rgba(255,255,255,0.25), transparent 60%)" }} />
       <div className="absolute inset-0 opacity-20"
         style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
       <span className="relative font-display text-6xl text-white/90 tracking-tighter drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">{initials}</span>
-    </>
-  );
-
-  // No poster on file: there's no "real" ratio to follow, so natural mode
-  // falls back to a sensible portrait box-art ratio instead of a square.
-  if (mode === "natural") {
-    return (
-      <div className={`relative w-full aspect-[3/4] bg-gradient-to-br ${game.accent} flex items-center justify-center`}>
-        {placeholder}
-      </div>
-    );
-  }
-
-  return (
-    <div className={`absolute inset-0 bg-gradient-to-br ${game.accent} flex items-center justify-center`}>
-      {placeholder}
     </div>
   );
 }
@@ -352,7 +305,7 @@ export function Offers() {
             لا توجد ألعاب متاحة حاليًا — تابعنا قريبًا لمزيد من العروض 🎮
           </p>
         ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 items-start">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
           {filteredGames.map((g, i) => {
             const isOpen = openSlug === g.slug;
             return (
@@ -368,8 +321,8 @@ export function Offers() {
                 aria-expanded={isOpen}
                 aria-label={`عرض أسعار ${g.name}`}
               >
-                <div className="relative overflow-hidden">
-                  <CoverArt game={g} mode="natural" />
+                <div className="relative aspect-square overflow-hidden">
+                  <CoverArt game={g} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
                   <div className="absolute top-2 left-2 flex gap-1">
@@ -431,7 +384,7 @@ export function Offers() {
                 </button>
 
                 <div className="relative aspect-square">
-                  <CoverArt game={g} mode="cover" />
+                  <CoverArt game={g} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                   <div className="absolute bottom-0 inset-x-0 p-5">
                     {g.platforms.length > 0 && (
