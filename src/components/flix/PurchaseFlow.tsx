@@ -28,8 +28,8 @@ export type PurchaseOrder = {
 type PayMethodId = "vodafone" | "telda" | "instapay";
 
 const ORDER_WA = "201109664083"; // للطلبات
-const VODAFONE_NUMBER = "01109664083"; // فودافون كاش فقط — بناءً على طلب العميل
-const PAY_NUMBER = "01014956483"; // إنستاباي (بدون تغيير)
+const VODAFONE_NUMBER = "01109664083"; // فودافون كاش فقط
+const INSTAPAY_NUMBER = "01014956483"; // انستاباي فقط
 const TELDA_ID = "@flix90";
 const INSTAPAY_LINK = "https://ipn.eg/S/flixop90/instapay/2jsoLA";
 
@@ -42,7 +42,7 @@ const METHODS: {
 }[] = [
   { id: "vodafone", icon: "📱", title: "فودافون كاش", detail: `اتصل أو حول على ${VODAFONE_NUMBER}`, label: "Vodafone Cash" },
   { id: "telda",    icon: "💳", title: "تيلدا",        detail: TELDA_ID, label: "Telda" },
-  { id: "instapay", icon: "💸", title: "انستاباي",     detail: `${PAY_NUMBER} — مصطفى محمد`, label: "InstaPay" },
+  { id: "instapay", icon: "💸", title: "انستاباي",     detail: `${INSTAPAY_NUMBER} — مصطفى محمد`, label: "InstaPay" },
   
 ];
 
@@ -305,10 +305,10 @@ export function PurchaseFlow({
                       <div className="space-y-2">
                         <div className="flex items-center justify-between gap-2 rounded-lg bg-black/40 border border-white/10 p-3">
                           <div>
-                            <div dir="ltr" className="font-display text-lg text-white tracking-wider">📞 {PAY_NUMBER}</div>
+                            <div dir="ltr" className="font-display text-lg text-white tracking-wider">📞 {INSTAPAY_NUMBER}</div>
                             <div className="text-xs text-white/60 mt-0.5">👤 مصطفى محمد</div>
                           </div>
-                          <CopyBtn value={PAY_NUMBER} />
+                          <CopyBtn value={INSTAPAY_NUMBER} />
                         </div>
                         <a
                           href={INSTAPAY_LINK}
@@ -443,12 +443,12 @@ export function PurchaseFlow({
                       <MessageCircle className="h-4 w-4" /> تواصل معنا · 01109664083
                     </a>
                     <a
-                      href={`https://wa.me/201014956483`}
+                      href={`https://wa.me/201109664083`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-600/15 border border-green-500/50 hover:bg-green-600/25 text-green-200 text-sm transition"
                     >
-                      <MessageCircle className="h-4 w-4" /> تواصل معنا · 01014956483
+                      <MessageCircle className="h-4 w-4" /> تواصل معنا · 01109664083
                     </a>
                   </div>
 
